@@ -18,10 +18,14 @@ from scipy.interpolate import interp1d
 # Adding knotted functionality as in 1606.03057
 
 try :
-    k_0           = float(sys.argv[1])
-    A             = float(sys.argv[2])
-    n_s           = float(sys.argv[3])
-    A_kmid        = float(sys.argv[4])
+    A_min         = float(sys.argv[1])
+    A_max         = float(sys.argv[2])
+    k_1           = float(sys.argv[3])
+    A_1           = float(sys.argv[4])
+    k_2           = float(sys.argv[5])
+    A_2           = float(sys.argv[6])
+    k_3           = float(sys.argv[7])
+    A_3           = float(sys.argv[8])
 
 # Error control, no need to touch
 except IndexError :
@@ -29,6 +33,12 @@ except IndexError :
 except ValueError :
     raise ValueError("It seems some of the arguments are not correctly formatted. "+
                      "Remember that they must be floating point numbers.")
+
+
+k_0 = 0.05
+A = 2.3e-9
+n_s = 1.
+
 
 #Limits for k and resolution
 log_k_min  = -6
@@ -44,10 +54,10 @@ def P(k):
 k_array = np.logspace(log_k_min,log_k_max,N_k)
 
 # Defining knot positions
-log_k_knots = [log_k_min,-3,log_k_max]
+log_k_knots = [log_k_min,k_1,k_2,k_3,log_k_max]
 
 # Defining knot values
-log_A_knots = [0.,A_kmid,0.]
+log_A_knots = np.log10([A_min,A_1,A_2,A_3,A_max])
 
 # Doing the interpolation
 f = interp1d(log_k_knots,log_A_knots)
